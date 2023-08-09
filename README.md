@@ -6,7 +6,7 @@
 <a href="https://pytorchlightning.ai/"><img alt="Lightning" src="https://img.shields.io/badge/-Lightning-792ee5?logo=pytorchlightning&logoColor=white"></a>
 <a href="https://hydra.cc/"><img alt="Config: Hydra" src="https://img.shields.io/badge/Config-Hydra-89b8cd"></a>
 <a href="https://github.com/ashleve/lightning-hydra-template"><img alt="Template" src="https://img.shields.io/badge/-Lightning--Hydra--Template-017F2F?style=flat&logo=github&labelColor=gray"></a><br>
-[![Paper](http://img.shields.io/badge/paper-SciPost%20Phys.%2015,%20018%20(2023)-B31B1B.svg)]((https://scipost.org/10.21468/SciPostPhys.15.1.018)])
+[![Paper](http://img.shields.io/badge/paper-SciPost%20Phys.%2015,%20018%20(2023)-B31B1B.svg)](https://scipost.org/10.21468/SciPostPhys.15.1.018])
 [![DOI](https://zenodo.org/badge/542095061.svg)](https://zenodo.org/badge/latestdoi/542095061)
 
 </div>
