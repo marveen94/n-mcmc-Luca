@@ -80,3 +80,18 @@ python predict.py --ckpt-path=logs/the/trained/model/path.ckpt --model=made
 ```
 
 <br>
+
+## Citation   
+```
+@article{10.21468/SciPostPhys.15.1.018,
+	title={{Accelerating equilibrium spin-glass simulations using quantum annealers  via generative deep learning}},
+	author={Giuseppe Scriva and Emanuele Costa and Benjamin McNaughton and Sebastiano Pilati},
+	journal={SciPost Phys.},
+	volume={15},
+	pages={018},
+	year={2023},
+	publisher={SciPost},
+	doi={10.21468/SciPostPhys.15.1.018},
+	url={https://scipost.org/10.21468/SciPostPhys.15.1.018},
+}
+```   
