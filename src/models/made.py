@@ -1,4 +1,4 @@
-from math import sqrt
+import math
 from typing import Any, Dict, List, Tuple
 
 import hydra
@@ -28,11 +28,15 @@ class Made(LightningModule):
 
     def forward(self, x: Tensor) -> Tensor:
         logits = self.model(x)
+        if self.hparams.conditional:
+            x = x[:,1:]
 
         return compute_prob(logits, x)
 
     def step(self, x: Tensor):
         logits = self.model(x)
+        if self.hparams.conditional:
+            x = x[:,1:]
 
         loss = self.criterion(logits, x)
 
@@ -82,19 +86,21 @@ class Made(LightningModule):
     def predict_step(
         self, batch, batch_idx: int, dataloader_idx: int = None
     ) -> Dict[str, np.ndarray]:
-        for spin in range(self.hparams.input_size):
+        for spin in range(self.hparams.input_size - self.hparams.conditional):
             logits = self.model(batch)
             # generate x_hat according to the compute probability
-            batch[:, spin] = torch.bernoulli(torch.sigmoid(logits[:, spin]))
+            batch[:, spin + self.hparams.conditional] = torch.bernoulli(torch.sigmoid(logits[:, spin]))
 
-        # compute the robability of the sample
+        # compute the probability of the sample
+        if self.hparams.conditional:
+            batch = batch[:,1:]
         log_prob = compute_prob(logits, batch).detach().cpu().numpy()
 
-        input_side = int(sqrt(self.hparams.input_size))
+        output_side = int(math.sqrt(self.hparams.input_size - self.hparams.conditional))
         # output should be {-1,+1}, spin convention
         # and for dwave data must be fortran contiguous
         batch = batch.detach().cpu().numpy().astype("int8")
-        batch = np.reshape(batch, (-1, input_side, input_side)) * 2 - 1
+        batch = np.reshape(batch, (-1, output_side, output_side)) * 2 - 1
         return {
             "sample": batch,
             "log_prob": log_prob,

@@ -35,8 +35,13 @@ class MadeModel(nn.Module):
             self.model.append(MaskedLinear(size[0], size[1]))
             self.model.append(activation)
 
+        # in ConditionalMADE the first input is the configuration energy
+        # so we generate only the configuration, not the energy 
+        output_size = hparams["input_size"]
+        if hparams['conditional']:
+            output_size -= 1
         # last masked layer has no activation
-        self.model.append(MaskedLinear(hparams["hidd_neurons"], hparams["input_size"]))
+        self.model.append(MaskedLinear(hparams["hidd_neurons"], output_size))
         # ModuleList has no forward method!
         self.model = nn.Sequential(*self.model)
 
@@ -77,8 +82,14 @@ class MadeModel(nn.Module):
             self.m[l][:, None] >= self.m[l - 1][None, :]
             for l in range(hparams["hidd_layers"])
         ]
+        # if CondMADE the last mask goes up from 1 to input_size
+        # since the zero entry is the configuration energy
+        # see https://arxiv.org/abs/1602.06701
+        last_mask = self.m[-1]
+        if hparams['conditional']:
+            last_mask = last_mask[1:]
         # construct the mask for the last layer
-        masks.append(self.m[-1][:, None] > self.m[hparams["hidd_layers"] - 1][None, :])
+        masks.append(last_mask[:, None] > self.m[hparams["hidd_layers"] - 1][None, :])
 
         # set the masks in all MaskedLinear layers
         layers = [l for l in self.model.modules() if isinstance(l, MaskedLinear)]
