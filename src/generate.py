@@ -30,6 +30,9 @@ def generate(
         print(model.hparams)
 
     dataset = torch.rand(shape, device=model.device)
+    dataset[:, 0] = torch.normal(-0.074, 0.017, size=(dataset.shape[0], 1)).view(
+        dataset.shape[0]
+    )  # -0.077 0.012
 
     # make it easy,
     # define only a DataLoader instead of a LightningDataModule
