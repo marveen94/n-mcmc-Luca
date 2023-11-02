@@ -6,9 +6,7 @@ from src.generate import generate
 # Parser
 parser = argparse.ArgumentParser()
 parser.add_argument("--ckpt-path", type=Path, help="Path to the checkpoint")
-parser.add_argument(
-    "--model", type=str, choices=["made", "pixel"], help="Model to use"
-)
+parser.add_argument("--model", type=str, choices=["made", "pixel"], help="Model to use")
 parser.add_argument(
     "--num-sample",
     type=int,
@@ -40,13 +38,24 @@ parser.add_argument(
     action="store_true",
     help="Flag if you want to see model parameters",
 )
+parser.add_argument(
+    "--mean",
+    type=float,
+    help="Only if you are working with ConditionalMADE: mean of initial energies",
+)
+parser.add_argument(
+    "--std",
+    type=float,
+    help="Only if you are working with ConditionalMADE: Standar deviation of initial energies. ATTENTION! Set the std of ",
+)
 
 
 def main(args: argparse.ArgumentParser):
-
     generate(
         args.ckpt_path,
         args.model,
+        args.mean,
+        args.std,
         args.num_sample,
         args.batch_size,
         args.num_workers,
