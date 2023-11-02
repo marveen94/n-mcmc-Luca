@@ -46,6 +46,7 @@ parser.add_argument(
 parser.add_argument(
     "--std",
     type=float,
+    default=0.0,
     help="Only if you are working with ConditionalMADE: Standar deviation of initial energies. ATTENTION! Set the std of ",
 )
 
