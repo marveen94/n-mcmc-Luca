@@ -11,6 +11,8 @@ from src.models.pixel_cnn import PixelCNN
 def generate(
     ckpt_path: str,
     model: str,
+    mean: float,
+    std: float,
     num_sample: str = 1,
     batch_size: int = 20000,
     num_workers: int = 1,
@@ -30,9 +32,12 @@ def generate(
         print(model.hparams)
 
     dataset = torch.rand(shape, device=model.device)
-    dataset[:, 0] = torch.normal(-0.074, 0.017, size=(dataset.shape[0], 1)).view(
-        dataset.shape[0]
-    )  # -0.077 0.012
+
+    # If ConditionalMADE the first column of the starting dataset corresponds to random energies of initial configurations
+    if model.hparams.conditional:
+        dataset[:, 0] = torch.normal(mean, std, size=(dataset.shape[0], 1)).view(
+            dataset.shape[0]
+        )
 
     # make it easy,
     # define only a DataLoader instead of a LightningDataModule
