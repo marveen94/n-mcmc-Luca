@@ -29,14 +29,14 @@ class Made(LightningModule):
     def forward(self, x: Tensor) -> Tensor:
         logits = self.model(x)
         if self.hparams.conditional:
-            x = x[:,1:]
+            x = x[:, 1:]
 
         return compute_prob(logits, x)
 
     def step(self, x: Tensor):
         logits = self.model(x)
         if self.hparams.conditional:
-            x = x[:,1:]
+            x = x[:, 1:]
 
         loss = self.criterion(logits, x)
 
@@ -89,11 +89,13 @@ class Made(LightningModule):
         for spin in range(self.hparams.input_size - self.hparams.conditional):
             logits = self.model(batch)
             # generate x_hat according to the compute probability
-            batch[:, spin + self.hparams.conditional] = torch.bernoulli(torch.sigmoid(logits[:, spin]))
+            batch[:, spin + self.hparams.conditional] = torch.bernoulli(
+                torch.sigmoid(logits[:, spin])
+            )
 
         # compute the probability of the sample
         if self.hparams.conditional:
-            batch = batch[:,1:]
+            batch = batch[:, 1:]
         log_prob = compute_prob(logits, batch).detach().cpu().numpy()
 
         output_side = int(math.sqrt(self.hparams.input_size - self.hparams.conditional))
