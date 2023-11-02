@@ -16,7 +16,12 @@ class ISINGDataset(Dataset):
         self.name = name
 
         # load the dataset and consider input in {0,1}
-        self.dataset = (torch.from_numpy(np.load(self.path)).float() + 1) / 2
+        self.dataset = torch.from_numpy(np.load(self.path)).float()
+        # For ConditionalMADE convert {0,1} only from the second column
+        self.dataset[:, 1:] = (self.dataset[:, 1:] + 1) / 2
+
+        # For normal MADE convert {0,1} all data!
+        # self.dataset = (torch.from_numpy(np.load(self.path)).float() + 1) / 2
         # some models need ravel inputs
         if kwargs["model"] == "src.models.pixel_cnn.PixelCNN":
             self.dataset = self.dataset.view(
