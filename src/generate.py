@@ -12,7 +12,7 @@ def generate(
     ckpt_path: str,
     model: str,
     mean: float,
-    std: float,
+    std: float = 0.0,
     num_sample: str = 1,
     batch_size: int = 20000,
     num_workers: int = 1,
@@ -38,6 +38,7 @@ def generate(
         dataset[:, 0] = torch.normal(mean, std, size=(dataset.shape[0], 1)).view(
             dataset.shape[0]
         )
+        print(f"initial energies: {dataset[:, 0]}")
 
     # make it easy,
     # define only a DataLoader instead of a LightningDataModule
