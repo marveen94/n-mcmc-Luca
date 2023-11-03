@@ -15,15 +15,17 @@ defaults:
 # this allows you to overwrite only specified parameters
 
 trainer:
-  max_epochs: 50
+  max_epochs: 200
 
 model:
   input_size: 485
-  hidd_neurons: 4096
+  # hidd_neurons: 4096
+  hidd_neurons: 2048
   activation: "LeakyReLU"
   optim:
     optimizer:
-      lr: 0.0005421571993772876
+      # lr: 0.0005421571993772876
+      lr: 0.005
   conditional: True
 
 datamodule:
