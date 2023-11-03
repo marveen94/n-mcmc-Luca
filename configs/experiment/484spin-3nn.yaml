@@ -18,14 +18,21 @@ trainer:
   max_epochs: 50
 
 model:
-  input_size: 484
+  input_size: 485
   hidd_neurons: 4096
   activation: "LeakyReLU"
   optim:
     optimizer:
       lr: 0.0005421571993772876
+  conditional: True
 
 datamodule:
+  datasets:
+    train:
+      path: ${work_dir}/data/484-z4-1mus/train_1mus_eng.npy
+    val:
+      path: ${work_dir}/data/484-z4-1mus/val_1mus_eng.npy
+
   num_workers:
     train: 4
     val: 2
