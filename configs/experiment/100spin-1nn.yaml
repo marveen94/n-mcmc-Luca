@@ -25,6 +25,6 @@ model:
 datamodule:
   datasets:
     train:
-      path: ${work_dir}/data/conditionalMADE-data/100-10mus/train_10mus-engs.npy
+      path: ${work_dir}/data/conditionalMADE-data/100-1mus/train_1mus-engs.npy
     val:
-      path: ${work_dir}/data/conditionalMADE-data/100-10mus/val_10mus-engs.npy
+      path: ${work_dir}/data/conditionalMADE-data/100-1mus/val_1mus-engs.npy
