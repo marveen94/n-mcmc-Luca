@@ -422,12 +422,12 @@ def get_energy(
             sample = out
 
         sample = sample.squeeze()
-        sample = np.reshape(sample, (-1, square_spin ** 2))
+        sample = np.reshape(sample, (-1, square_spin**2))
 
         eng = []
         for s in sample:
             eng.append(compute_energy(s, neighbours, couplings, len_neighbours))
-        eng = np.asarray(eng) / square_spin ** 2
+        eng = np.asarray(eng) / square_spin**2
 
         engs.append(eng)
     return engs
