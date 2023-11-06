@@ -431,3 +431,64 @@ def get_energy(
 
         engs.append(eng)
     return engs
+
+
+def conditional_dataset(
+    path: str,
+    spins: int,
+    coupling_path: str,
+    train_perc: int = 80,
+    save: Optional[bool] = True,
+    save_path: str = ".",
+    shuffle: Optional[bool] = True,
+) -> Tuple[np.ndarray]:
+    """Create train and validation datasets from samples or other datasets to train Conditional MADE
+
+    Args:
+        path (str): Data path
+        spins (int): Number of spins in the configuration
+        coupling_path (str): Coupling path
+        train_perc (int, optional): Percentage of data to assing to the train set. Defaults to 80.
+        save (Optional[bool], optional): Save or not. Defaults to True.
+        save_path (str, optional): Conditional dataset saving path. Defaults to ".".
+        shuffle (Optional[bool], optional): Shuffle the data before splitting. Defaults to True.
+
+    Raises:
+        ValueError: The square of `spins` has to be a natural number since the function works for square lattices.
+
+    Returns:
+        Tuple[np.ndarray]: train dataset, validation dataset.
+    """
+    spin_side = np.sqrt(spins)
+    if not spin_side.is_integer():
+        raise ValueError(
+            "The spin side is not an integer... this function is inteded to work with square lattices."
+        )
+    spin_side = int(spin_side)
+    samples = np.load(path)
+    neigh, coup, len_neigh = get_couplings(spin_side, coupling_path)
+    data_engs = []
+    for data in samples:
+        data_engs.append(compute_energy(data, neigh, coup, len_neigh) / spins)
+    data_engs = np.asarray(data_engs)
+
+    # reshape data_engs for stack it with data configurations
+    data_engs = data_engs[:, np.newaxis]
+
+    # reshape sample configurations and make them flat
+    samples = samples.reshape(-1, spins)
+
+    dataset = np.hstack((data_engs, samples))
+    if shuffle:
+        np.random.shuffle(dataset)
+
+    num_data = data_engs.shape[0]
+    num_train_data = int((train_perc / 100) * num_data)
+    train_dataset = dataset[:num_train_data]
+    val_dataset = dataset[num_train_data:]
+
+    if save:
+        np.save(f"{save_path}/{spins}-sample{num_data}-train.npy", train_dataset)
+        np.save(f"{save_path}/{spins}-sample{num_data}-val.npy", val_dataset)
+
+    return train_dataset, val_dataset
