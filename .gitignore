@@ -154,3 +154,7 @@ lightning_logs/
 *.tar*
 *.sg*
 temp-data/
+
+# output logs
+out*.txt
+out*.out
