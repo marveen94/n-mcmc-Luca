@@ -105,7 +105,7 @@ MAX_CPUS = 32
 
 def main(args: argparse.ArgumentParser):
     print(args)
-    disable_bar = False
+    disable_bar = True
     # remove bar for multiple proc
     if len(args.beta) > 1:
         disable_bar = True
