@@ -158,3 +158,6 @@ temp-data/
 # output logs
 out*.txt
 out*.out
+
+# MacOS metadata
+*.DS_Store
