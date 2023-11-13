@@ -14,7 +14,7 @@ defaults:
 # this allows you to overwrite only specified parameters
 
 model:
-  input_size: 101
+  input_size: 200
   hidd_neurons: 512
   activation: "LeakyReLU"
   optim:
@@ -25,6 +25,6 @@ model:
 datamodule:
   datasets:
     train:
-      path: ${work_dir}/data/conditionalMADE-data/100-1mus/train_1mus-engs.npy
+      path: ${work_dir}/data/condMADE-2/100-1mus/train_1mus_engs.npy
     val:
-      path: ${work_dir}/data/conditionalMADE-data/100-1mus/val_1mus-engs.npy
+      path: ${work_dir}/data/condMADE-2/100-1mus/val_1mus_engs.npy

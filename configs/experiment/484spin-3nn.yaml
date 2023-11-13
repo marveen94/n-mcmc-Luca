@@ -18,9 +18,9 @@ trainer:
   max_epochs: 200
 
 model:
-  input_size: 485
-  # hidd_neurons: 4096
-  hidd_neurons: 2048
+  input_size: 968
+  hidd_neurons: 4096
+  # hidd_neurons: 2048
   activation: "LeakyReLU"
   optim:
     optimizer:
@@ -31,9 +31,9 @@ model:
 datamodule:
   datasets:
     train:
-      path: ${work_dir}/data/484-z4-1mus/train_1mus_eng.npy
+      path: ${work_dir}/data/condMADE-2/484-z4-1mus/train_1mus_eng.npy
     val:
-      path: ${work_dir}/data/484-z4-1mus/val_1mus_eng.npy
+      path: ${work_dir}/data/condMADE-2/484-z4-1mus/val_1mus_eng.npy
 
   num_workers:
     train: 4
