@@ -35,8 +35,12 @@ def generate(
 
     # If ConditionalMADE the first column of the starting dataset corresponds to random energies of initial configurations
     if model.hparams.conditional:
-        dataset[:, 0] = torch.normal(mean, std, size=(dataset.shape[0], 1)).view(
-            dataset.shape[0]
+        latent_variables_size = int(shape[1] / 2)
+        # dataset[:, :latent_variables_size] = torch.normal(
+        #     mean, std, size=(dataset.shape[0], 1)
+        # ).view(dataset.shape[0])
+        dataset[:, :latent_variables_size] = torch.normal(
+            mean, std, size=(dataset.shape[0], latent_variables_size)
         )
         print(f"initial energies: {dataset[:, 0]}")
 
@@ -65,7 +69,7 @@ def generate(
         out["log_prob"] = np.append(out["log_prob"], batch["log_prob"], axis=0)
 
     if save_sample:
-        save_name = f"sample-{num_sample}_size-{size}_{ckpt_path.parts[-4]}_{ckpt_path.parts[-3]}"
+        save_name = f"sample-{num_sample}_size-{size}-Econd{mean}_{ckpt_path.parts[-4]}_{ckpt_path.parts[-3]}"
         print("\nSaving sample generated as", save_name)
         np.savez(save_name, **out)
 

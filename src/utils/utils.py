@@ -437,7 +437,7 @@ def conditional_dataset(
     path: str,
     spins: int,
     coupling_path: str,
-    train_perc: int = 80,
+    train_perc: Optional[int],
     save: Optional[bool] = True,
     save_path: str = ".",
     shuffle: Optional[bool] = True,
@@ -482,13 +482,16 @@ def conditional_dataset(
     if shuffle:
         np.random.shuffle(dataset)
 
-    num_data = data_engs.shape[0]
-    num_train_data = int((train_perc / 100) * num_data)
-    train_dataset = dataset[:num_train_data]
-    val_dataset = dataset[num_train_data:]
+    if train_perc:
+        num_data = data_engs.shape[0]
+        num_train_data = int((train_perc / 100) * num_data)
+        train_dataset = dataset[:num_train_data]
+        val_dataset = dataset[num_train_data:]
 
-    if save:
+    if save and train_perc:
         np.save(f"{save_path}/{spins}-sample{num_data}-train.npy", train_dataset)
         np.save(f"{save_path}/{spins}-sample{num_data}-val.npy", val_dataset)
+    else:
+        np.save(f"{save_path}/{spins}-sample{num_data}.npy", dataset)
 
     return train_dataset, val_dataset

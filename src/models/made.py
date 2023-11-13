@@ -29,14 +29,17 @@ class Made(LightningModule):
     def forward(self, x: Tensor) -> Tensor:
         logits = self.model(x)
         if self.hparams.conditional:
-            x = x[:, 1:]
-
+            latent_variables_size = int(x.shape[1] / 2)
+            #! x = x[:, 1:]
+            x = x[:, latent_variables_size:]
         return compute_prob(logits, x)
 
     def step(self, x: Tensor):
         logits = self.model(x)
         if self.hparams.conditional:
-            x = x[:, 1:]
+            # x = x[:, 1:]
+            latent_variables_size = int(x.shape[1] / 2)
+            x = x[:, latent_variables_size:]
 
         loss = self.criterion(logits, x)
 
@@ -86,19 +89,29 @@ class Made(LightningModule):
     def predict_step(
         self, batch, batch_idx: int, dataloader_idx: int = None
     ) -> Dict[str, np.ndarray]:
-        for spin in range(self.hparams.input_size - self.hparams.conditional):
-            logits = self.model(batch)
-            # generate x_hat according to the compute probability
-            batch[:, spin + self.hparams.conditional] = torch.bernoulli(
-                torch.sigmoid(logits[:, spin])
-            )
+        output_size = self.hparams.input_size
+        if self.hparams.conditional:
+            output_size = int(self.hparams.input_size / 2)
+            #! for spin in range(self.hparams.input_size - self.hparams.conditional):
+            for spin in range(output_size):
+                logits = self.model(batch)
+                # generate x_hat according to the compute probability
+                #! batch[:, spin + self.hparams.conditional] = torch.bernoulli(
+                #!     torch.sigmoid(logits[:, spin])
+                #! )
+                batch[:, spin + output_size] = torch.bernoulli(
+                    torch.sigmoid(logits[:, spin])
+                )
 
         # compute the probability of the sample
         if self.hparams.conditional:
-            batch = batch[:, 1:]
+            #! batch = batch[:, 1:]
+            batch = batch[:, output_size:]
+
         log_prob = compute_prob(logits, batch).detach().cpu().numpy()
 
-        output_side = int(math.sqrt(self.hparams.input_size - self.hparams.conditional))
+        #! output_side = int(math.sqrt(self.hparams.input_size - self.hparams.conditional))
+        output_side = int(math.sqrt(self.hparams.input_size - output_size))
         # output should be {-1,+1}, spin convention
         # and for dwave data must be fortran contiguous
         batch = batch.detach().cpu().numpy().astype("int8")

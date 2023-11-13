@@ -14,11 +14,13 @@ class ISINGDataset(Dataset):
         super().__init__()
         self.path = path
         self.name = name
-
         # load the dataset and consider input in {0,1}
         self.dataset = torch.from_numpy(np.load(self.path)).float()
-        # For ConditionalMADE convert {0,1} only from the second column
-        self.dataset[:, 1:] = (self.dataset[:, 1:] + 1) / 2
+        self.latent_variable_size = int(self.dataset.shape[1] / 2)
+        # For ConditionalMADE convert {0,1} only the latent variables
+        self.dataset[:, self.latent_variable_size :] = (
+            self.dataset[:, self.latent_variable_size :] + 1
+        ) / 2
 
         # For normal MADE convert {0,1} all data!
         # self.dataset = (torch.from_numpy(np.load(self.path)).float() + 1) / 2
