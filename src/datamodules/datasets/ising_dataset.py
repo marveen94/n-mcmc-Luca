@@ -16,11 +16,30 @@ class ISINGDataset(Dataset):
         self.name = name
         # load the dataset and consider input in {0,1}
         self.dataset = torch.from_numpy(np.load(self.path)).float()
-        self.latent_variable_size = int(self.dataset.shape[1] / 2)
+        self.conditional_variable_size = kwargs["conditional_variables_size"]
         # For ConditionalMADE convert {0,1} only the latent variables
-        self.dataset[:, self.latent_variable_size :] = (
-            self.dataset[:, self.latent_variable_size :] + 1
-        ) / 2
+        if kwargs["conditional"]:
+            self.dataset[:, self.conditional_variable_size :] = (
+                self.dataset[:, self.conditional_variable_size :] + 1
+            ) / 2
+            ##### Energy normalization #####
+            eng_min = torch.min(self.dataset[:, 0])
+            eng_max = torch.max(self.dataset[:, 0])
+            eng_mean = torch.mean(self.dataset[:, 0])
+            eng_std = torch.std(self.dataset[:, 0])
+            self.dataset[:, : self.conditional_variable_size] = (
+                self.dataset[:, : self.conditional_variable_size] - eng_min
+            ) / (eng_max - eng_min)
+            # self.dataset[:, : self.conditional_variable_size] = -self.dataset[
+            #     :, : self.conditional_variable_size
+            # ]
+            ##### Energy standardization #####
+            # self.dataset[:, : self.conditional_variable_size] = (
+            #     self.dataset[:, : self.conditional_variable_size] - eng_mean
+            # ) / eng_std
+
+        else:
+            self.dataset = (self.dataset + 1) / 2
 
         # For normal MADE convert {0,1} all data!
         # self.dataset = (torch.from_numpy(np.load(self.path)).float() + 1) / 2
@@ -33,7 +52,9 @@ class ISINGDataset(Dataset):
             self.dataset = self.dataset.view(len(self.dataset), -1)
 
         # check if data match with model's input size
-        assert self.dataset.shape[-1] == kwargs["input_size"]
+        assert (
+            self.dataset.shape[-1] == kwargs["input_size"]
+        ), f"{self.dataset.shape[-1]} not equal {kwargs['input_size']}"
 
         self.dataset = TensorDataset(self.dataset)
 

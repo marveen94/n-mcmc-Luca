@@ -35,12 +35,12 @@ def generate(
 
     # If ConditionalMADE the first column of the starting dataset corresponds to random energies of initial configurations
     if model.hparams.conditional:
-        latent_variables_size = int(shape[1] / 2)
+        conditional_variables_size = model.hparams.conditional_variables_size
         # dataset[:, :latent_variables_size] = torch.normal(
         #     mean, std, size=(dataset.shape[0], 1)
         # ).view(dataset.shape[0])
-        dataset[:, :latent_variables_size] = torch.normal(
-            mean, std, size=(dataset.shape[0], latent_variables_size)
+        dataset[:, :conditional_variables_size] = torch.normal(
+            mean, std, size=(dataset.shape[0], conditional_variables_size)
         )
         print(f"initial energies: {dataset[:, 0]}")
 

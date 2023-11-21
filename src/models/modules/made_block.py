@@ -37,13 +37,12 @@ class MadeModel(nn.Module):
 
         # in ConditionalMADE the first input is the configuration energy
         # so we generate only the configuration, not the energy
-        #! output_size = hparams["input_size"]
+
         self.output_size = hparams["input_size"]
         if hparams["conditional"]:
-            #!     output_size -= 1
-            self.output_size -= hparams["input_size"] / 2
-            self.output_size = int(self.output_size)
-        print(f"output size: {self.output_size}")
+            self.output_size = (
+                hparams["input_size"] - hparams["conditional_variables_size"]
+            )
         # last masked layer has no activation
         self.model.append(MaskedLinear(hparams["hidd_neurons"], self.output_size))
         # ModuleList has no forward method!
@@ -68,6 +67,11 @@ class MadeModel(nn.Module):
         # use the input's natural order or permute the input state
         if hparams["natural_ordering"]:
             self.m[-1] = torch.arange(hparams["input_size"], dtype=torch.int)
+            if hparams["conditional"]:
+                self.m[-1][: hparams["conditional_variables_size"]] = 0
+                self.m[-1][hparams["conditional_variables_size"] :] = torch.arange(
+                    self.output_size, dtype=torch.int
+                )
         else:
             self.m[-1] = torch.randperm(hparams["input_size"], dtype=torch.int)
 
@@ -91,8 +95,7 @@ class MadeModel(nn.Module):
         # see https://arxiv.org/abs/1602.06701
         last_mask = self.m[-1]
         if hparams["conditional"]:
-            #! last_mask = last_mask[1:]
-            last_mask = last_mask[self.output_size :]
+            last_mask = last_mask[hparams["conditional_variables_size"] :]
         # construct the mask for the last layer
         masks.append(last_mask[:, None] > self.m[hparams["hidd_layers"] - 1][None, :])
 

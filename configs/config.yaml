@@ -27,6 +27,8 @@ work_dir: ${hydra:runtime.cwd}
 # seed for random number generators in pytorch, numpy and python.random
 seed: 42
 
+# Conditional variables
+# conditional_variables: 200
 # pretty print config at the start of the run using Rich library
 print_config: True
 

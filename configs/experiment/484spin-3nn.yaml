@@ -18,9 +18,10 @@ trainer:
   max_epochs: 200
 
 model:
-  input_size: 968
+  input_size: 506
   hidd_neurons: 4096
   # hidd_neurons: 2048
+  conditional_variables_size: 22
   activation: "LeakyReLU"
   optim:
     optimizer:
@@ -31,9 +32,9 @@ model:
 datamodule:
   datasets:
     train:
-      path: ${work_dir}/data/condMADE-2/484-z4-1mus/train_1mus_eng.npy
+      path: ${work_dir}/data/condMADE-datasets/484-z4-1mus/22cond-var/train_1mus_eng.npy
     val:
-      path: ${work_dir}/data/condMADE-2/484-z4-1mus/val_1mus_eng.npy
+      path: ${work_dir}/data/condMADE-datasets/484-z4-1mus/22cond-var/val_1mus_eng.npy
 
   num_workers:
     train: 4
@@ -44,5 +45,5 @@ datamodule:
 
 callbacks:
   early_stopping:
-    patience: 30
+    patience: 10
 

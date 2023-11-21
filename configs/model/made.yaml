@@ -2,6 +2,7 @@ _target_: src.models.made.Made
 input_size: 484
 hidd_layers: 1
 hidd_neurons: 2048
+conditional_variables_size: 0
 activation: "LeakyReLU"
 natural_ordering: True
 num_masks: 1

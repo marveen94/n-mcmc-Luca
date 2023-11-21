@@ -7,6 +7,8 @@ datasets:
     path: ${work_dir}/data/datasets/484-3nn-100mus/DWAVE-train-484spins-3nn-100mu.npy
     input_size: ${model.input_size}
     model: ${model._target_}
+    conditional_variables_size: ${model.conditional_variables_size}
+    conditional: ${model.conditional}
 
   val:
     _target_: src.datamodules.datasets.ising_dataset.ISINGDataset
@@ -14,6 +16,8 @@ datasets:
     path: ${work_dir}/data/datasets/484-3nn-100mus/DWAVE-test-484spins-3nn-100mu.npy
     input_size: ${model.input_size}
     model: ${model._target_}
+    conditional_variables_size: ${model.conditional_variables_size}
+    conditional: ${model.conditional}
 
   test:
     _target_: src.datamodules.datasets.ising_dataset.ISINGDataset
@@ -21,6 +25,8 @@ datasets:
     path: /home/gscriva/neural-mcmc/data/dataset/484-1nn-10mu/DWAVE-test-484spins-10mu.npy
     input_size: ${model.input_size}
     model: ${model._target_}
+    conditional_variables_size: ${model.conditional_variables_size}
+    conditional: ${model.conditional}
 
   # data_dir: ${data_dir} # data_dir is specified in config.yaml
 
@@ -33,3 +39,4 @@ batch_size:
   train: 96
   val: 128
   test: 128
+
