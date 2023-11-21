@@ -437,6 +437,7 @@ def conditional_dataset(
     path: str,
     spins: int,
     coupling_path: str,
+    # cond_var_size: Optional[int],  # TODO: to implement
     train_perc: Optional[int],
     save: Optional[bool] = True,
     save_path: str = ".",

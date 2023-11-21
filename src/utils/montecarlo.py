@@ -167,7 +167,7 @@ def neural_mcmc(
 
     # get the dimension of the sample from the data
     spin_side = proposals[0].shape[-1]
-    spins = spin_side ** 2
+    spins = spin_side**2
     proposals = np.reshape(proposals, (proposals.shape[0], -1))
 
     accepted_log_prob = np.nan
@@ -190,7 +190,7 @@ def neural_mcmc(
         accepted_sample, neighbours, couplings, len_neighbours
     )
     # compute boltzmann probability
-    accepted_boltz_log_prob = compute_boltz_prob(accepted_eng, beta, spin_side ** 2)
+    accepted_boltz_log_prob = compute_boltz_prob(accepted_eng, beta, spin_side**2)
 
     print(f"\nPerforming Neural MCMC at beta={beta}")
 
@@ -209,7 +209,7 @@ def neural_mcmc(
             continue
 
         # compute Boltzmann probability
-        trial_boltz_log_prob = compute_boltz_prob(trial_eng, beta, spin_side ** 2)
+        trial_boltz_log_prob = compute_boltz_prob(trial_eng, beta, spin_side**2)
         if not np.isfinite(trial_boltz_log_prob):
             print("NAN in trial_boltz_log_prob")
             continue
@@ -243,7 +243,7 @@ def neural_mcmc(
             accepted += 1
 
         pbar.set_description(f"eng: {accepted_eng / spin_side**2:2.5f}", refresh=False)
-
+        # ? if steps % save_every == 0:
         # save acceped sample and its energy
         samples.append(accepted_sample)
         energies.append(accepted_eng)
@@ -332,7 +332,7 @@ def seq_hybrid_mcmc(
 
     # get the dimension of the sample from the data
     spin_side = proposals[0].shape[-1]
-    spins = spin_side ** 2
+    spins = spin_side**2
     proposals = np.reshape(proposals, (proposals.shape[0], -1))
 
     accepted_log_prob = np.nan
